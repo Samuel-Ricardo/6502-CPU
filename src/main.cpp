@@ -1,4 +1,22 @@
+#include <cstdint>
 #include <iostream>
+#include <stdint.h>
+
+using Byte = unsigned char;
+using Word = unsigned short;
+
+struct Mem {
+
+  // 64 KB //
+  static constexpr uint32_t MAX_MEM = 1024 * 64;
+  Byte Data[MAX_MEM];
+
+  void initialize() {
+    for (uint32_t i = 0; i < MAX_MEM; i++) {
+      Data[i] = 0;
+    }
+  }
+};
 
 struct CPU {
 
@@ -35,9 +53,6 @@ struct CPU {
    * operations as wells as increments and decrements
    */
 
-  using Byte = unsigned char;
-  using Word = unsigned short;
-
   // Program Counter
   Word PC;
 
@@ -60,19 +75,22 @@ struct CPU {
   Byte V : 1; // Overflow Flag
   Byte N : 1; // Negative Flag
 
-  void Reset() {
+  void Reset(Mem &memory) {
 
     PC = 0xFFFC;
     SP = 0x0100;
     C = Z = I = D = B = V = N = 0;
     A = X = Y = 0;
+
+    memory.initialize();
   }
 };
 
 int main() {
 
+  Mem mem;
   CPU cpu;
-  cpu.Reset();
+  cpu.Reset(mem);
 
   std::cout << "Hello, World! :D" << std::endl;
   return 0;
