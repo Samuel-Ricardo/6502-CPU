@@ -105,6 +105,11 @@ struct CPU {
     return Data;
   }
 
+  void LDASetStatus() {
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+  }
+
   // INFO: OPCODES: ADDRESSING MODES
 
   // NOTE: INSTRUCIONT LOAD ACCUMULATOR IMMEDIATE
