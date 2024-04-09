@@ -124,6 +124,23 @@ struct CPU {
       }
     };
   };
+
+  void LogState() {
+
+    printf("Register A: %02X\n", A);
+    printf("Register X: %02X\n", X);
+    printf("Register Y: %02X\n", Y);
+    printf("Register C: %02X\n", C);
+    printf("Register Z: %02X\n", Z);
+    printf("Register I: %02X\n", I);
+    printf("Register D: %02X\n", D);
+    printf("Register B: %02X\n", B);
+    printf("Register V: %02X\n", V);
+    printf("Register N: %02X\n", N);
+
+    printf("Program Counter: %04X\n", PC);
+    printf("Stack Pointer: %04X\n", SP);
+  }
 };
 
 int main() {
@@ -137,21 +154,9 @@ int main() {
   mem[0xFFFD] = 0x42;
   // INFO: End a inline little program
 
+  cpu.LogState();
   cpu.Execute(2, mem);
-
-  printf("Register A: %02X\n", cpu.A);
-  printf("Register X: %02X\n", cpu.X);
-  printf("Register Y: %02X\n", cpu.Y);
-  printf("Register C: %02X\n", cpu.C);
-  printf("Register Z: %02X\n", cpu.Z);
-  printf("Register I: %02X\n", cpu.I);
-  printf("Register D: %02X\n", cpu.D);
-  printf("Register B: %02X\n", cpu.B);
-  printf("Register V: %02X\n", cpu.V);
-  printf("Register N: %02X\n", cpu.N);
-
-  printf("Program Counter: %04X\n", cpu.PC);
-  printf("Stack Pointer: %04X\n", cpu.SP);
+  cpu.LogState();
 
   std::cout << "Hello, World! :D" << std::endl;
   return 0;
