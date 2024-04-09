@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 
 using Byte = unsigned char;
 using Word = unsigned short;
@@ -94,9 +95,29 @@ struct CPU {
     return Data;
   }
 
+  // NOTE: OPCODES
+
+  // NOTE: INSTRUCIONT LOAD ACCUMULATOR IMMEDIATLY
+  static constexpr Byte INS_LDA_IM = 0xA9;
+
   void Execute(uint32_t Cycles, Mem &memory) {
     while (Cycles > 0) {
       Byte Instruction = FetchByte(Cycles, memory);
+
+      switch (Instruction) {
+
+      case INS_LDA_IM: {
+        Byte Value = FetchByte(Cycles, memory);
+
+        A = Value;
+        Z = (A == 0);
+        N = (A & 0b10000000) > 0;
+      } break;
+
+      default: {
+        printf("Instruction not implemented or handled: 0x%X\n", Instruction);
+      } break;
+      }
     };
   };
 };
