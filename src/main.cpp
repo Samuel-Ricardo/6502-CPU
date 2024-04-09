@@ -132,6 +132,27 @@ int main() {
   CPU cpu;
   cpu.Reset(mem);
 
+  // INFO: Start a inline little program || Machine Code [Virtual] ||
+  mem[0xFFFC] = CPU::INS_LDA_IM;
+  mem[0xFFFD] = 0x42;
+  // INFO: End a inline little program
+
+  cpu.Execute(2, mem);
+
+  printf("Register A: %02X\n", cpu.A);
+  printf("Register X: %02X\n", cpu.X);
+  printf("Register Y: %02X\n", cpu.Y);
+  printf("Register C: %02X\n", cpu.C);
+  printf("Register Z: %02X\n", cpu.Z);
+  printf("Register I: %02X\n", cpu.I);
+  printf("Register D: %02X\n", cpu.D);
+  printf("Register B: %02X\n", cpu.B);
+  printf("Register V: %02X\n", cpu.V);
+  printf("Register N: %02X\n", cpu.N);
+
+  printf("Program Counter: %04X\n", cpu.PC);
+  printf("Stack Pointer: %04X\n", cpu.SP);
+
   std::cout << "Hello, World! :D" << std::endl;
   return 0;
 }
