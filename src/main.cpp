@@ -99,10 +99,13 @@ struct CPU {
     return Data;
   }
 
-  // NOTE: OPCODES
+  // INFO: OPCODES: ADDRESSING MODES
 
-  // NOTE: INSTRUCIONT LOAD ACCUMULATOR IMMEDIATLY
+  // NOTE: INSTRUCIONT LOAD ACCUMULATOR IMMEDIATE
   static constexpr Byte INS_LDA_IM = 0xA9;
+
+  // NOTE: INSTRUCTION LOAD ACCUMULATOR ZERO PAGE
+  static constexpr Byte INS_LDA_ZP = 0xA5;
 
   void Execute(uint32_t Cycles, Mem &memory) {
     while (Cycles > 0) {
