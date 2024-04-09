@@ -99,6 +99,12 @@ struct CPU {
     return Data;
   }
 
+  Byte ReadByte(uint32_t &Cycles, Byte Address, Mem &memory) {
+    Byte Data = memory[Address];
+    Cycles--;
+    return Data;
+  }
+
   // INFO: OPCODES: ADDRESSING MODES
 
   // NOTE: INSTRUCIONT LOAD ACCUMULATOR IMMEDIATE
