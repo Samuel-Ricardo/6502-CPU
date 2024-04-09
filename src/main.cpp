@@ -128,8 +128,13 @@ struct CPU {
         Byte Value = FetchByte(Cycles, memory);
 
         A = Value;
-        Z = (A == 0);
-        N = (A & 0b10000000) > 0;
+        LDASetStatus();
+      } break;
+
+      case INS_LDA_ZP: {
+        Byte ZeroPageAddress = FetchByte(Cycles, memory);
+        A = ReadByte(Cycles, ZeroPageAddress, memory);
+        LDASetStatus();
       } break;
 
       default: {
