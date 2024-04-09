@@ -1,6 +1,6 @@
-#include <cstdint>
 #include <iostream>
-#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 using Byte = unsigned char;
 using Word = unsigned short;
@@ -16,6 +16,8 @@ struct Mem {
       Data[i] = 0;
     }
   }
+
+  Byte operator[](uint32_t index) const { return Data[index]; }
 };
 
 struct CPU {
@@ -84,6 +86,19 @@ struct CPU {
 
     memory.initialize();
   }
+
+  Byte FetchByte(uint32_t &Cycles, Mem &memory) {
+    Byte Data = memory[PC];
+    PC++;
+    Cycles--;
+    return Data;
+  }
+
+  void Execute(uint32_t Cycles, Mem &memory) {
+    while (Cycles > 0) {
+      Byte Instruction = FetchByte(Cycles, memory);
+    };
+  };
 };
 
 int main() {
