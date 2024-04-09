@@ -18,7 +18,11 @@ struct Mem {
     }
   }
 
+  // INFO: READ 1 BYTE //
   Byte operator[](uint32_t index) const { return Data[index]; }
+
+  // INFO: WRITE 1 BYTE //
+  Byte &operator[](uint32_t index) { return Data[index]; }
 };
 
 struct CPU {
