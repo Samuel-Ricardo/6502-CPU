@@ -99,6 +99,28 @@ struct CPU {
     return Data;
   }
 
+  Word FetchWordc(uint32_t &Cycles, Mem &memory) {
+
+    // INFO: 6502 IS LITTLE ENDIAN
+    Word Data = memory[PC];
+    PC++;
+
+    Data |= (memory[PC] << 8);
+    PC++;
+
+    Cycles -= 2;
+
+    // INFO: IF YOU WANT TO HANDLE ENDIANNESS
+    // YOU WOULD HAVE TO SWAP BYTES HERE
+    // if ( PLATFORM_LITTLE_ENDIAN )
+    // {
+    //    SwapBytesInWord( Data );
+    //    ?Data = (Data << 8) | (Data >> 8);?
+    // }
+
+    return Data;
+  }
+
   Byte ReadByte(uint32_t &Cycles, Byte Address, Mem &memory) {
     Byte Data = memory[Address];
     Cycles--;
@@ -120,6 +142,9 @@ struct CPU {
 
   // NOTE: INSTRUCTION LOAD ACCUMULATOR ZERO PAGE X
   static constexpr Byte INS_LDA_ZPX = 0xB5;
+
+  // NOTE: INSTRUCTION JUMP TO SUBROUTINE
+  static constexpr Byte INS_JSR = 0x20;
 
   void Execute(uint32_t Cycles, Mem &memory) {
     while (Cycles > 0) {
@@ -144,10 +169,14 @@ struct CPU {
         Byte ZeroPageAddress = FetchByte(Cycles, memory);
 
         ZeroPageAddress += X;
-        Cycles--;
+        Cycles--; // INFO: 4 Clocks
 
         A = ReadByte(Cycles, ZeroPageAddress, memory);
         LDASetStatus();
+      } break;
+
+      case INS_JSR: {
+        // TODO: Implement
       } break;
 
       default: {
