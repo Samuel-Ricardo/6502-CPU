@@ -183,11 +183,12 @@ struct CPU {
         LDASetStatus();
       } break;
 
-      case INS_JSR: {
+      case INS_JSR: { // INFO: 6 Cycles / Clocks
         Word SubroutineAddress = FetchWord(Cycles, memory);
 
-        memory[SP] = PC - 1;
-        Cycles--;
+        // INFO: PUSH SUBROUTINE ADDRESS TO STACK
+        SP -= 2;
+        memory.WriteWord(PC - 1, SP, Cycles);
 
         PC = SubroutineAddress;
         Cycles--;
@@ -226,17 +227,24 @@ int main() {
   cpu.Reset(mem);
 
   // INFO: Start a inline program || Machine Code [Virtual] || Cartridge||
+
   //  mem[0xFFFC] = CPU::INS_LDA_IM;
   //  mem[0xFFFD] = 0x42;
 
-  mem[0xFFFC] = CPU::INS_LDA_ZP; // Instruction
-  mem[0xFFFD] = 0x42;            // Set Zero Page Address
-  mem[0x0042] = 0x84;            // Set a Value in Zero Page Address
+  //  mem[0xFFFC] = CPU::INS_LDA_ZP; // Instruction
+  //  mem[0xFFFD] = 0x42;            // Set Zero Page Address
+  //  mem[0x0042] = 0x84;            // Set a Value in Zero Page Address
+
+  mem[0xFFFC] = CPU::INS_JSR;
+  mem[0xFFFD] = 0x42;
+  mem[0xFFFE] = 0x42;
+  mem[0x4242] = CPU::INS_LDA_IM;
+  mem[0x4243] = 0x84;
 
   // INFO: End a inline little program
 
   cpu.LogState();
-  cpu.Execute(3, mem);
+  cpu.Execute(9, mem);
   cpu.LogState();
 
   std::cout << "Hello, World! :D" << std::endl;
