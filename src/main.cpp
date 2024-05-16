@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,6 +24,13 @@ struct Mem {
 
   // INFO: WRITE 1 BYTE //
   Byte &operator[](uint32_t index) { return Data[index]; }
+
+  // INFO: WRITE 1 WORD | 2 BYTES //
+  void WriteWord(Word Value, uint32_t Address, uint32_t Cycles) {
+    Data[Address] = Value & 0xFF;
+    Data[Address + 1] = (Value >> 8) & 0xFF;
+    Cycles -= 2;
+  }
 };
 
 struct CPU {
@@ -99,7 +107,7 @@ struct CPU {
     return Data;
   }
 
-  Word FetchWordc(uint32_t &Cycles, Mem &memory) {
+  Word FetchWord(uint32_t &Cycles, Mem &memory) {
 
     // INFO: 6502 IS LITTLE ENDIAN
     Word Data = memory[PC];
@@ -176,7 +184,14 @@ struct CPU {
       } break;
 
       case INS_JSR: {
-        // TODO: Implement
+        Word SubroutineAddress = FetchWord(Cycles, memory);
+
+        memory[SP] = PC - 1;
+        Cycles--;
+
+        PC = SubroutineAddress;
+        Cycles--;
+
       } break;
 
       default: {
