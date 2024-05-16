@@ -118,6 +118,9 @@ struct CPU {
   // NOTE: INSTRUCTION LOAD ACCUMULATOR ZERO PAGE
   static constexpr Byte INS_LDA_ZP = 0xA5;
 
+  // NOTE: INSTRUCTION LOAD ACCUMULATOR ZERO PAGE X
+  static constexpr Byte INS_LDA_ZPX = 0xB5;
+
   void Execute(uint32_t Cycles, Mem &memory) {
     while (Cycles > 0) {
       Byte Instruction = FetchByte(Cycles, memory);
@@ -133,6 +136,16 @@ struct CPU {
 
       case INS_LDA_ZP: {
         Byte ZeroPageAddress = FetchByte(Cycles, memory);
+        A = ReadByte(Cycles, ZeroPageAddress, memory);
+        LDASetStatus();
+      } break;
+
+      case INS_LDA_ZPX: {
+        Byte ZeroPageAddress = FetchByte(Cycles, memory);
+
+        ZeroPageAddress += X;
+        Cycles--;
+
         A = ReadByte(Cycles, ZeroPageAddress, memory);
         LDASetStatus();
       } break;
@@ -172,9 +185,9 @@ int main() {
   //  mem[0xFFFC] = CPU::INS_LDA_IM;
   //  mem[0xFFFD] = 0x42;
 
-  mem[0xFFFC] = CPU::INS_LDA_ZP;
-  mem[0xFFFD] = 0x42;
-  mem[0x0042] = 0x84;
+  mem[0xFFFC] = CPU::INS_LDA_ZP; // Instruction
+  mem[0xFFFD] = 0x42;            // Set Zero Page Address
+  mem[0x0042] = 0x84;            // Set a Value in Zero Page Address
 
   // INFO: End a inline little program
 
