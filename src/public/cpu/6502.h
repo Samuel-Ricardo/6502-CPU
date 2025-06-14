@@ -11,4 +11,13 @@
 struct CPU : virtual public Flags,
              virtual public Registers,
              public INSTRUCTION,
-             public Logger {};
+             public Logger {
+
+  void Reset(Memory &memory) {
+    PC = 0xFFFC;
+    SP = 0x0100;
+
+    resetFlags();
+    memory.initialize();
+  }
+};
