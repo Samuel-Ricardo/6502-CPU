@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Compile the C++ program
-RUN g++ src/main.cpp -o target/app
+RUN g++ src/private/main.cpp -o target/app
 
 # Set the command to run when the container starts
 CMD ["./target/app"]
