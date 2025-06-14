@@ -7,7 +7,7 @@
 using Byte = unsigned char;
 using Word = unsigned short;
 
-struct Mem {
+struct Memory {
 
   // 64 KB //
   static constexpr uint32_t MAX_MEM = 1024 * 64;
@@ -90,7 +90,7 @@ struct CPU {
   Byte V : 1; // Overflow Flag
   Byte N : 1; // Negative Flag
 
-  void Reset(Mem &memory) {
+  void Reset(Memory &memory) {
 
     PC = 0xFFFC;
     SP = 0x0100;
@@ -100,14 +100,14 @@ struct CPU {
     memory.initialize();
   }
 
-  Byte FetchByte(uint32_t &Cycles, Mem &memory) {
+  Byte FetchByte(uint32_t &Cycles, Memory &memory) {
     Byte Data = memory[PC];
     PC++;
     Cycles--;
     return Data;
   }
 
-  Word FetchWord(uint32_t &Cycles, Mem &memory) {
+  Word FetchWord(uint32_t &Cycles, Memory &memory) {
 
     // INFO: 6502 IS LITTLE ENDIAN
     Word Data = memory[PC];
@@ -129,7 +129,7 @@ struct CPU {
     return Data;
   }
 
-  Byte ReadByte(uint32_t &Cycles, Byte Address, Mem &memory) {
+  Byte ReadByte(uint32_t &Cycles, Byte Address, Memory &memory) {
     Byte Data = memory[Address];
     Cycles--;
     return Data;
@@ -154,7 +154,7 @@ struct CPU {
   // NOTE: INSTRUCTION JUMP TO SUBROUTINE
   static constexpr Byte INS_JSR = 0x20;
 
-  void Execute(uint32_t Cycles, Mem &memory) {
+  void Execute(uint32_t Cycles, Memory &memory) {
     while (Cycles > 0) {
       Byte Instruction = FetchByte(Cycles, memory);
 
@@ -222,7 +222,7 @@ struct CPU {
 
 int main() {
 
-  Mem mem;
+  Memory mem;
   CPU cpu;
   cpu.Reset(mem);
 
@@ -234,6 +234,8 @@ int main() {
   //  mem[0xFFFC] = CPU::INS_LDA_ZP; // Instruction
   //  mem[0xFFFD] = 0x42;            // Set Zero Page Address
   //  mem[0x0042] = 0x84;            // Set a Value in Zero Page Address
+
+  // INFO: SECOND PHASE
 
   mem[0xFFFC] = CPU::INS_JSR;
   mem[0xFFFD] = 0x42;
