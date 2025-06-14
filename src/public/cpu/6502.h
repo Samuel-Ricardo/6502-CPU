@@ -36,4 +36,10 @@ struct CPU : virtual public Flags,
     Cycles -= 2;
     return Data;
   }
+
+  Byte ReadByte(uint32_t &Cycles, Byte Address, Memory &memory) {
+    Byte Data = memory[Address];
+    Cycles--;
+    return Data;
+  }
 };
