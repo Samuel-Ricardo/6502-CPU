@@ -20,4 +20,20 @@ struct CPU : virtual public Flags,
     resetFlags();
     memory.initialize();
   }
+
+  Byte FetchByte(uint32_t &Cycles, Memory &memory) {
+    Byte Data = memory[PC];
+    PC++;
+    Cycles--;
+    return Data;
+  }
+
+  Word FetchWord(uint32_t &Cycles, Memory &memory) {
+    Word Data = memory[PC];
+    PC++;
+    Data |= (memory[PC] << 8);
+    PC++;
+    Cycles -= 2;
+    return Data;
+  }
 };
