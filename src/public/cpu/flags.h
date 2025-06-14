@@ -11,4 +11,9 @@ struct Flags {
   Byte B : 1;
   Byte V : 1;
   Byte N : 1;
+
+  void resetFlags() {
+    C = Z = I = D = B = V = N = 0;
+    A = X = Y = 0;
+  }
 };
